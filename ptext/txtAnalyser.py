@@ -11,7 +11,6 @@ __author__ = 'Zhu JunYong'
 import sys
 import os
 import jieba
-import jieba.posseg as pseg
 
 #遍历指定路径去寻找符合targets条件的文件或文件夹
 def analyse(source, target):
