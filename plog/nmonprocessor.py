@@ -78,8 +78,20 @@ def parseNmonFile(filename, maxTimestamp):
         # filesystem line ,timestamp string prefix
         timestamps = line
         #cpu_all: 7 items
-        for d in dr.getData(DataType('CPU_ALL', 'CPU_ALL', Array)):
-            line += '%.1f,' % d
+        cpuArray = dr.getData(DataType('CPU_ALL', 'CPU_ALL', Array))
+        # 有时cpuall有6个值，有时有7个值，按7个值补全，目前是发现第5个值steal%会缺，补全为0
+        # 6个值的情况
+        if len(cpuArray) == 6:
+            for d in cpuArray[:4]:
+                line += '%.1f,' % d
+            # 补全第5个值 steal%
+            line += '0.0,'
+            for d in cpuArray[-2:]:
+                line += '%.1f,' % d
+        # 7个值的情况
+        else:
+            for d in cpuArray:
+                line += '%.1f,' % d
         #mem: 16 items
         for d in dr.getData(DataType('MEM', 'MEM', Array)):
             line += '%.1f,' % d
